@@ -1,6 +1,7 @@
 ﻿using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace Repositories.Concretes.EntityFramework.Contexts;
 
@@ -16,6 +17,11 @@ public class BaseDbContext:DbContext
         Configuration = configuration;
     }
 
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
 
 
 }
