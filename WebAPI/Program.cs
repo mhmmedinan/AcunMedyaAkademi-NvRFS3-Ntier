@@ -1,4 +1,5 @@
 using Business;
+using Core.Exceptions.Extensions;
 using Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ConfigureCustomExceptionMiddleware();
+}
+
+if (app.Environment.IsProduction())
+{
+    app.ConfigureCustomExceptionMiddleware();
 }
 
 // Configure the HTTP request pipeline.

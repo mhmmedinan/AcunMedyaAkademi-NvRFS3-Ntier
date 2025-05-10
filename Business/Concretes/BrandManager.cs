@@ -2,6 +2,7 @@
 using Business.Abstracts;
 using Business.Dtos.Requests.Brand;
 using Business.Dtos.Responses.Brand;
+using Business.Rules;
 using Entities;
 using Repositories.Abstracts;
 
@@ -11,11 +12,13 @@ namespace Business.Concretes
     {
         private readonly IBrandRepository _brandRepository;
         private readonly IMapper _mapper;
+        private readonly BrandBusinessRules _rules;
 
-        public BrandManager(IBrandRepository brandRepository, IMapper mapper)
+        public BrandManager(IBrandRepository brandRepository, IMapper mapper, BrandBusinessRules rules)
         {
             _brandRepository = brandRepository;
             _mapper = mapper;
+            _rules = rules;
         }
 
         public CreatedBrandResponse Add(CreateBrandRequest request)
@@ -33,6 +36,14 @@ namespace Business.Concretes
             //    Name = addedBrand.Name,
             //    CreatedDate = addedBrand.CreatedDate,
             //};
+
+
+            //Anti pattern
+            //var existingBrand = _brandRepository.Get(b=>b.Name==request.Name);
+            //if (existingBrand != null)
+            //    throw new BusinessException($"{request.Name} adında zaten bir marka mevcut");
+
+            _rules.CheckIfBrandNameIsUnique(request.Name);
 
             //AutoMapper
 
